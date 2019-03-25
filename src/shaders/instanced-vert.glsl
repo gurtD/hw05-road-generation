@@ -11,19 +11,33 @@ in vec4 vs_Nor; // Non-instanced, and presently unused
 in vec4 vs_Col; // An instanced rendering attribute; each particle instance has a different color
 in vec3 vs_Translate; // Another instance rendering attribute used to position each quad instance in the scene
 in vec2 vs_UV; // Non-instanced, and presently unused in main(). Feel free to use it for your meshes.
+in vec4 vs_Transform0;
+in vec4 vs_Transform1;
+in vec4 vs_Transform2;
+in vec4 vs_Transform3;
 
+
+out vec4 fs_Nor;
 out vec4 fs_Col;
 out vec4 fs_Pos;
 
 void main()
 {
-    fs_Col = vs_Col;
-    fs_Pos = vs_Pos;
+    fs_Nor = vs_Nor;
+    mat4 transform = mat4(vs_Transform0, vs_Transform1, vs_Transform2, vs_Transform3);
+    
+    //fs_Pos = vs_Pos;
 
-    vec3 offset = vs_Translate;
-    offset.z = (sin((u_Time + offset.x) * 3.14159 * 0.1) + cos((u_Time + offset.y) * 3.14159 * 0.1)) * 1.5;
+    mat4 scale = mat4(1.0);
+    float scalar = 1.0;
+    scale[0][0] = scalar * 0.01;
+    scale[1][1] = scalar * 0.025;
+    scale[2][2] = 0.001;
 
-    vec3 billboardPos = offset + vs_Pos.x * u_CameraAxes[0] + vs_Pos.y * u_CameraAxes[1];
-
-    gl_Position = u_ViewProj * vec4(billboardPos, 1.0);
+    
+    fs_Col = vec4(vs_Transform0.xyz, 1.0);
+    
+    //gl_Position = u_ViewProj * transform * scale * vs_Pos;
+    fs_Pos = transform * scale * vs_Pos;
+    gl_Position = transform * scale * vs_Pos;
 }

@@ -10,6 +10,10 @@ class Mesh extends Drawable {
   colors: Float32Array;
   uvs: Float32Array;
   center: vec4;
+  transforms0: Float32Array
+  transforms1: Float32Array
+  transforms2: Float32Array
+  transforms3: Float32Array
 
   objString: string;
 
@@ -58,8 +62,13 @@ class Mesh extends Drawable {
     this.generateNor();
     this.generateUV();
     this.generateCol();
+    this.generateTransformation0();
+    this.generateTransformation1();
+    this.generateTransformation2();
+    this.generateTransformation3();
 
     this.count = this.indices.length;
+    this.numInstances = 1;
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.bufIdx);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.indices, gl.STATIC_DRAW);
 
@@ -77,7 +86,33 @@ class Mesh extends Drawable {
 
     console.log(`Created Mesh from OBJ`);
     this.objString = ""; // hacky clear
+
+    console.log(this.positions);
+  }
+
+  setInstanceVBOs(zero: Float32Array, one:  Float32Array, two: Float32Array, three: Float32Array) {
+    this.transforms0 = zero;
+    this.transforms1 = one;
+    this.transforms2 = two;
+    this.transforms3 = three;
+    //console.log(this.transforms0);
+    //console.log(this.transforms1);
+    //console.log(this.transforms2);
+    //console.log(this.transforms3);
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufTransformation0);
+    gl.bufferData(gl.ARRAY_BUFFER, this.transforms0, gl.STATIC_DRAW);
+    
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufTransformation1);
+    gl.bufferData(gl.ARRAY_BUFFER, this.transforms1, gl.STATIC_DRAW);
+    
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufTransformation2);
+    gl.bufferData(gl.ARRAY_BUFFER, this.transforms2, gl.STATIC_DRAW);
+    
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufTransformation3);
+    gl.bufferData(gl.ARRAY_BUFFER, this.transforms3, gl.STATIC_DRAW);
   }
 };
+
+
 
 export default Mesh;

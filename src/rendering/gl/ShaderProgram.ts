@@ -25,6 +25,10 @@ class ShaderProgram {
   attrNor: number;
   attrCol: number; // This time, it's an instanced rendering attribute, so each particle can have a unique color. Not per-vertex, but per-instance.
   attrTranslate: number; // Used in the vertex shader during instanced rendering to offset the vertex positions to the particle's drawn position.
+  attrTransformation0: number;
+  attrTransformation1: number;
+  attrTransformation2: number;
+  attrTransformation3: number;
   attrUV: number;
 
   unifModel: WebGLUniformLocation;
@@ -49,9 +53,13 @@ class ShaderProgram {
     }
 
     this.attrPos = gl.getAttribLocation(this.prog, "vs_Pos");
-    this.attrNor = gl.getAttribLocation(this.prog, "vs_Nor");
     this.attrCol = gl.getAttribLocation(this.prog, "vs_Col");
+    this.attrNor = gl.getAttribLocation(this.prog, "vs_Nor");
     this.attrTranslate = gl.getAttribLocation(this.prog, "vs_Translate");
+    this.attrTransformation0 = gl.getAttribLocation(this.prog, "vs_Transform0");
+    this.attrTransformation1 = gl.getAttribLocation(this.prog, "vs_Transform1");
+    this.attrTransformation2 = gl.getAttribLocation(this.prog, "vs_Transform2");
+    this.attrTransformation3 = gl.getAttribLocation(this.prog, "vs_Transform3");
     this.attrUV = gl.getAttribLocation(this.prog, "vs_UV");
     this.unifModel      = gl.getUniformLocation(this.prog, "u_Model");
     this.unifModelInvTr = gl.getUniformLocation(this.prog, "u_ModelInvTr");
@@ -152,6 +160,30 @@ class ShaderProgram {
       gl.vertexAttribDivisor(this.attrTranslate, 1); // Advance 1 index in translate VBO for each drawn instance
     }
 
+    if (this.attrTransformation0 != -1 && d.bindTransformation0()) {
+      gl.enableVertexAttribArray(this.attrTransformation0);
+      gl.vertexAttribPointer(this.attrTransformation0, 4, gl.FLOAT, false, 0, 0);
+      gl.vertexAttribDivisor(this.attrTransformation0, 1);
+    }
+
+    if (this.attrTransformation1 != -1 && d.bindTransformation1()) {
+      gl.enableVertexAttribArray(this.attrTransformation1);
+      gl.vertexAttribPointer(this.attrTransformation1, 4, gl.FLOAT, false, 0, 0);
+      gl.vertexAttribDivisor(this.attrTransformation1, 1);
+    }
+
+    if (this.attrTransformation2 != -1 && d.bindTransformation2()) {
+      gl.enableVertexAttribArray(this.attrTransformation2);
+      gl.vertexAttribPointer(this.attrTransformation2, 4, gl.FLOAT, false, 0, 0);
+      gl.vertexAttribDivisor(this.attrTransformation2, 1);
+    }
+
+    if (this.attrTransformation3 != -1 && d.bindTransformation3()) {
+      gl.enableVertexAttribArray(this.attrTransformation3);
+      gl.vertexAttribPointer(this.attrTransformation3, 4, gl.FLOAT, false, 0, 0);
+      gl.vertexAttribDivisor(this.attrTransformation3, 1);
+    }
+
     if (this.attrUV != -1 && d.bindUV()) {
       gl.enableVertexAttribArray(this.attrUV);
       gl.vertexAttribPointer(this.attrUV, 2, gl.FLOAT, false, 0, 0);
@@ -178,6 +210,10 @@ class ShaderProgram {
     if (this.attrNor != -1) gl.disableVertexAttribArray(this.attrNor);
     if (this.attrCol != -1) gl.disableVertexAttribArray(this.attrCol);
     if (this.attrTranslate != -1) gl.disableVertexAttribArray(this.attrTranslate);
+    if (this.attrTransformation0 != -1) gl.disableVertexAttribArray(this.attrTransformation0);
+    if (this.attrTransformation1 != -1) gl.disableVertexAttribArray(this.attrTransformation1);
+    if (this.attrTransformation2 != -1) gl.disableVertexAttribArray(this.attrTransformation2);
+    if (this.attrTransformation3 != -1) gl.disableVertexAttribArray(this.attrTransformation3);
     if (this.attrUV != -1) gl.disableVertexAttribArray(this.attrUV);
   }
 };

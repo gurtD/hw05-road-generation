@@ -1,56 +1,32 @@
-# Homework 5: Road Generation
+Gdarley
+https://gurtd.github.io/hw05-road-generation/
 
-For this assignment, you will generate a network of roads to form the basis of a city using a modified version of L-systems. As in homework 4, you will be using instanced rendering to draw your road networks.
+For both the terrain and population density I used fbm. For the terrain the lighter the color
+the higher the elevation, and for the population the dark the color the greater the 
+population. I didnt have time to add a switch for the user to set which of the two to see, so 
+instead I simply made the screen transition between the two over time. The green is the 
+terrain (with blue being the water), and the purple is the population density. 
 
-## Base Code
-We have provided the same code that came with homework 4, but you will likely want to use most of your code from that assignment. Feel free to copy over as much of your homework 4 implementation as you want. We have also provided [Procedural Modeling of Cities](proceduralCityGeneration.pdf), a brief technical paper describing techniques for generating road networks. Refer to this as you implement the sections below.
+For my lsystem, I modified it from before to simply be one head that starts at a random 
+point, designated in the main when construction the lsystem, and I expand from that point 
+onwards to create the main road. Each part of the road is saved as an edge, of which are all 
+stored in a set of edges (with an edge being made up of two points). In the lsystem, I keep 
+track of the head and at each call to expand I have the head make a new point 0.05 away from 
+it, but scan for the point with the highest population, by changing the angle the new point 
+is from its start. In the case of my lsystem, it scans 7 points in front of it at various 
+angles, and what ever has the highest population density is the next point and a new edge is 
+created from the starting point and the new point, it also saves the angle that made the end 
+point. As for the grid part of my road, I take every third edge ive made, and branch off and 
+make the grid streets. I do this by calling a function that creates 3 offshoot roads, at 
+angles of 0 90 and 180 from the original edge. It then calls itself recursively to further 
+deepen the grid. Finally to draw the roads, I iterate though all the edges I have, and get 
+the start point, use its coordinates to make a translation matrix for where the drawn road 
+segment will start, and then takes the rotation angle saved from before to rotate the 
+segment. I then do this for all edges and send each transformation matrix to the instanced 
+shader to draw.
 
-## Assignment Requirements
-- __(10 points)__ Use whatever noise functions suit you to generate 2D map data of the following information, and set up GUI toggles to render each map on a 2D screen quadrangle. The user should have the option to view both overlaid on each other.
-  - Terrain elevation, setting anything below a certain height to water. Higher elevation should be lighter in color. Include an option to display a simple land versus water view.
-  - Population density. Denser population should be lighter in color.
-- __(20 points)__ Create a set of classes to represent a pseudo L-system; you will still have a Turtle to track your drawing state, but you will expand your road network based on the Turtle's current environment as it moves and draws. You won't be tracking a grammar as a set of characters, but you will keep a set of rules to determine how to advance your Turtle.
-  - Your Turtle will begin from a random point in the bounds of your screen.
-  - Depending on the type of road network being generated (see next section) your Turtle will move forward and draw some sort of road in its wake.
-  - Each time the Turtle completes a road segment, it will evaluate whether it should branch to create more roads in different directions (same idea as the push and pop of Turtle state). This is where your expansion rules come in; the Turtle must decide how it will branch (if at all).
-  - Store your roads as sets of edges and intersections so that you can more easily make roads connect to one another as described in section 3.3.1 of Procedural Modeling of Cities
-- __(20 points)__ Create distinct rule sets for drawing roads that obey the following layouts (refer to figure 5 in [Procedural Modeling of Cities](proceduralCityGeneration.pdf) for illustrations):
-  - Basic road branching: The main roads follow population density as a metric for directional bias
-  - Checkered road networking: The roads are aligned with some global directional vector and have a maximum block width and length. Intersections are all roughly 90 degrees.
-- __(30 points)__ Using the components you created in the previous sections, generate the 2D street layout of a city with the following features:
-  - An overarching sparse layout of highway roads that are thicker than other roads
-  - Within the highway outline, denser clusters of smaller roads with less visual line thickness than the highways
-  - Inclusion of both road branching methods
-  - Only highways are allowed to cross water
-  - Roads are self-sensitive, as described in section 3.3.1 of Procedural Modeling of Cities
 
-- __(10 points)__ Using dat.GUI, make at least three aspects of your program interactive, such as:
-  - Terrain shape
-  - Population density
-  - Highway density
-  - Random seed used for the RNG basis of road branching
-
-- __(10 points)__ Following the specifications listed
-[here](https://github.com/pjcozzi/Articles/blob/master/CIS565/GitHubRepo/README.md),
-create your own README.md, renaming the file you are presently reading to
-INSTRUCTIONS.md. Don't worry about discussing runtime optimization for this
-project. Make sure your README contains the following information:
-    - Your name and PennKey
-    - Citation of any external resources you found helpful when implementing this
-    assignment.
-    - A link to your live github.io demo (refer to the pinned Piazza post on
-      how to make a live demo through github.io)
-    - An explanation of the techniques you used to generate your L-System features.
-    Please be as detailed as you can; not only will this help you explain your work
-    to recruiters, but it helps us understand your project when we grade it!
-
-## Expected visual output
-The results of your road generation need only be simple 2D images, like the ones in Procedural Modeling of Cities. You may make 3D terrain with overlaid roads if you want, but for this assignment it's not necessary.
-
-![](nyc.png)
-
-## Extra Credit (Up to 20 points)
-- Implement additional road layouts as described in Procedural Modeling of Cities
-  - Radial road networking: The main roads follow radial tracks around some predefined centerpoint
-  - Elevation road networking: Roads follow paths of least elevation change
-- Add any polish features you'd like to make your visual output more interesting
+For the gui, I give the parameters of number of iterations of the main road, the recursion 
+depth of the grid road creation, and an angle modifier used to scale the search angles for 
+the main road expansion mentioned earlier. I didn't have time to do the road intersection 
+part unfortunately
