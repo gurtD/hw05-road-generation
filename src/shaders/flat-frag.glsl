@@ -70,6 +70,4 @@ void main() {
 
   out_Col = mix(land, pop, sin(mod(u_Time / 50.0, 3.14)));
   
-  //out_Col = vec4(0.5 * (fs_Pos + vec2(1.0)), 0.0, 1.0);
-  //out_Col = vec4(land_grandient(landNoise), 1.0);
 }

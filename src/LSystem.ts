@@ -103,8 +103,7 @@ class LSystem {
     }
 
     popNoise(x: number, y: number) {
-        console.log("pop noise")
-        console.log(Math.pow(this.fbm(y, x, 2.3) - 0.5, 1.5));
+        
         return Math.pow(this.fbm(y, x, 2.3) - 0.5, 1.5);
     }
 
@@ -143,71 +142,17 @@ class LSystem {
                 finalAngle = this.mainAngle - 1.57 + 0.523 * i  * this.angleMod;
             }
         }
-        console.log("final x");
-        console.log(finalX);
-        console.log("final y");
-        console.log(finalY);
+        
         this.edges.add(new Edge(this.mainHead, new Point(finalX, finalY), finalAngle, false));
         this.mainHead = new Point(finalX, finalY);
         this.mainAngle = finalAngle;
         
         
-        /*
-        let prevPop = this.popNoise(oldX + 0.1, oldY);
-        let newX = oldX + 0.1;
-        let newY = oldY;
-
-        let currentPop = this.popNoise(oldX + 0.07, oldY + 0.07);
-        if (currentPop > prevPop) {
-            newX = oldX + 0.07;
-            newY = oldY + 0.07;
-        }
-        currentPop = this.popNoise(oldX, oldY + 0.1);
-        if (currentPop > prevPop) {
-            newX = oldX;
-            newY = oldY + 0.1;
-        }
-        currentPop = this.popNoise(oldX - 0.07, oldY + 0.07);
-        if (currentPop > prevPop) {
-            newX = oldX - 0.07;
-            newY = oldY + 0.07;
-        }
-        currentPop = this.popNoise(oldX - 0.1, oldY);
-        if (currentPop > prevPop) {
-            newX = oldX - 0.1;
-            newY = oldY;
-        }
-        currentPop = this.popNoise(oldX - 0.07, oldY - 0.07);
-        if (currentPop > prevPop) {
-            newX = oldX - 0.07;
-            newY = oldY - 0.07;
-        }
-        currentPop = this.popNoise(oldX, oldY - 0.1);
-        if (currentPop > prevPop) {
-            newX = oldX;
-            newY = oldY - 0.1;
-        }
-
-        currentPop = this.popNoise(oldX + 0.07, oldY - 0.07);
-        if (currentPop > prevPop) {
-            newX = oldX + 0.07;
-            newY = oldY - 0.07;
-        }
-
         
-
-        this.edges.add(new Edge(this.mainHead, new Point(newX, newY)));
-        this.mainHead = new Point(newX, newY);
-        */
-        /*
-        this.edges.add(new Edge(this.mainHead, new Point(this.mainHead.x  + this.offset, this.mainHead.y + this.offset)));
-        this.mainHead = new Point(this.mainHead.x + this.offset, this.mainHead.y + this.offset);
-        */  
     }
 
     drawMatrices(gridIter: number): mat4[] {
-        console.log("draw matrices being called");
-        //this.grid(1, new Point(0.0, 0.0), 0);
+        
 
         let output: mat4[] = new Array<mat4>();
         let streetStarts: Edge[] = new Array<Edge>();
@@ -226,15 +171,7 @@ class LSystem {
         }
         
         for (let current of this.edges) {
-            console.log("we have a an edge");
-            console.log("startX");
-            console.log(current.start.x);
-            console.log("startY");
-            console.log(current.start.y);
-            console.log("endX");
-            console.log(current.end.x);
-            console.log("endY");
-            console.log(current.end.y);
+            
             
             
 
@@ -276,18 +213,16 @@ class LSystem {
             let startLandNoise = this.fbm(current.start.x , current.start.y, 1.0 ) * 0.4;
             let endLandNoise = this.fbm(current.end.x , current.end.y, 1.0 ) * 0.4;  
 
-            //if (startLandNoise > 0.3 && endLandNoise > 0.3) {
+            
                 output.push(transformation);
-            //}
+            
 
             
-            //console.log(transformation);
+            
             console.log("/////////////////////");
             count += 1;
          
         }
-        //console.log("gonna printfirst mat4");
-        //console.log(output[0])
         
         return output;
     }

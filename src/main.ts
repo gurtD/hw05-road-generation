@@ -74,11 +74,7 @@ function loadScene() {
 
   
   let array: mat4[] = lSystem.drawMatrices(parameters.gridIterations);
-  //console.log(array.length)
-  //console.log(array[0]);
-  //console.log(array[1]);
-  //console.log(array[2]);
-  //console.log(array[3]);
+  
 
   let transformArray0 = [];
   let transformArray1 = [];
