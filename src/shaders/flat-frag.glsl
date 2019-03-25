@@ -69,5 +69,5 @@ void main() {
   vec4 land = vec4(land_grandient(landNoise), 1.0);
 
   out_Col = mix(land, pop, sin(mod(u_Time / 50.0, 3.14)));
-  
+   
 }
